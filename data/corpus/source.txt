@@ -1,0 +1,3 @@
+ISEAR: https://github.com/bogdanneacsa/tts-master/blob/master/ISEAR/ise_processed
+tlkh: https://github.com/tlkh/text-emotion-classification/blob/master/dataset/original/text_emotion.csv
+EmoInt: https://saifmohammad.com/WebPages/EmotionIntensity-SharedTask.html
