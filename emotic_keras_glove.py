@@ -111,7 +111,7 @@ model.add(Activation('softmax'))
 model.compile(loss='categorical_crossentropy', optimizer='Adagrad', metrics=['categorical_accuracy'])
 history = model.fit(x_train_encoded, y_train_encoded,
                     batch_size=512,
-                    epochs=4,
+                    epochs=1,
                     verbose=1, validation_split=0.1)
 
 # Save the weights

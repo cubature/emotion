@@ -11,9 +11,9 @@ path_train_txt = './data/train.txt'
 path_test_txt = './data/test.txt'
 
 # paramètres à faire varier pour les tests
-input_struct = 'bag_of_words'
+input_struct = 'sequence_of_words'
 texts_to_matrix_mode = 'count'
-model_type = 'cnn_lstm'
+model_type = 'rnn'
 model_loss_function = 'categorical_crossentropy'
 model_optimizer = 'Adagrad'
 activation_function = 'relu'
@@ -40,7 +40,7 @@ t.fit_on_texts(x_train)
 if input_struct == 'bag_of_words':
 	x_train_encoded = t.texts_to_matrix(x_train, mode=texts_to_matrix_mode)[:, 1:] # https://github.com/keras-team/keras/issues/8583
 	x_test_encoded = t.texts_to_matrix(x_test, mode=texts_to_matrix_mode)[:, 1:]
-	if model_type == 'rnn' or 'lstm' or 'bi_lstm':
+	if model_type == 'rnn' or model_type == 'lstm' or model_type == 'bi_lstm':
 		x_train_encoded = np.reshape(x_train_encoded, (x_train_encoded.shape[0], 1, x_train_encoded.shape[1]))
 		x_test_encoded = np.reshape(x_test_encoded, (x_test_encoded.shape[0], 1, x_test_encoded.shape[1]))
 		time_step = 1
