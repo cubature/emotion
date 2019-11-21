@@ -11,9 +11,9 @@ path_train_txt = './data/train.txt'
 path_test_txt = './data/test.txt'
 
 # paramètres à faire varier pour les tests
-input_struct = 'sequence_of_words'
+input_struct = 'bag_of_words'
 texts_to_matrix_mode = 'count'
-model_type = 'rnn'
+model_type = 'cnn_lstm'
 model_loss_function = 'categorical_crossentropy'
 model_optimizer = 'Adagrad'
 activation_function = 'relu'
@@ -44,6 +44,9 @@ if input_struct == 'bag_of_words':
 		x_train_encoded = np.reshape(x_train_encoded, (x_train_encoded.shape[0], 1, x_train_encoded.shape[1]))
 		x_test_encoded = np.reshape(x_test_encoded, (x_test_encoded.shape[0], 1, x_test_encoded.shape[1]))
 		time_step = 1
+	if model_type == 'cnn_lstm' or model_type == 'cnn':
+		x_train_encoded = np.reshape(x_train_encoded, (x_train_encoded.shape[0], x_train_encoded.shape[1], 1))
+		x_test_encoded = np.reshape(x_test_encoded, (x_test_encoded.shape[0], x_test_encoded.shape[1], 1))
 elif input_struct == 'sequence_of_words':
 	x_train_encoded = t.texts_to_sequences(x_train)
 	x_test_encoded = t.texts_to_sequences(x_test)
