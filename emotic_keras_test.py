@@ -35,7 +35,11 @@ phrase = "So sleepy again and it's not even that late. I fail once again."#input
 # encodedInput = np.reshape(encodedInput, (encodedInput.shape[0], encodedInput.shape[1], 1))
 
 # 4 glove
-encodedInput = pad_sequences(tokenizer.texts_to_sequences(phrase), maxlen=1000)
+# encodedInput = pad_sequences(tokenizer.texts_to_sequences(phrase), maxlen=1000)
+
+# 5 bag_of_words and cnn or cnn_lstm
+encodedInput = tokenizer.texts_to_matrix([phrase], mode='count')[:, 1:]
+encodedInput = np.reshape(encodedInput, (encodedInput.shape[0], encodedInput.shape[1], 1))
 
 predictions = model.predict(encodedInput)
 print('predictions : ' + str(predictions))
