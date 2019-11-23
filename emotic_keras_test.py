@@ -25,21 +25,21 @@ phrase = "So sleepy again and it's not even that late. I fail once again."#input
 # 1 bag_of_words and not rnn, lstm or bi-lstm
 # encodedInput = tokenizer.texts_to_matrix([phrase], mode='count')[:, 1:]
 
-# 2 bag_of_words and rnn, lstm or bi-lstm
+# 2 bag_of_words and cnn, rnn, lstm or bi-lstm
 # encodedInput = tokenizer.texts_to_matrix([phrase], mode='count')[:, 1:]
 # encodedInput = np.reshape(encodedInput, (encodedInput.shape[0], 1, encodedInput.shape[1]))
 
-# 3 sequence_of_words
+# 3 bag_of_words and cnn_lstm
+encodedInput = tokenizer.texts_to_matrix([phrase], mode='count')[:, 1:]
+encodedInput = np.reshape(encodedInput, (encodedInput.shape[0], encodedInput.shape[1], 1))
+
+# 4 sequence_of_words
 # encodedInput = tokenizer.texts_to_sequences(phrase)
 # encodedInput = pad_sequences(encodedInput, maxlen=40, padding='post', truncating='post')
 # encodedInput = np.reshape(encodedInput, (encodedInput.shape[0], encodedInput.shape[1], 1))
 
-# 4 glove
+# 5 glove
 # encodedInput = pad_sequences(tokenizer.texts_to_sequences(phrase), maxlen=1000)
-
-# 5 bag_of_words and cnn or cnn_lstm
-encodedInput = tokenizer.texts_to_matrix([phrase], mode='count')[:, 1:]
-encodedInput = np.reshape(encodedInput, (encodedInput.shape[0], encodedInput.shape[1], 1))
 
 predictions = model.predict(encodedInput)
 print('predictions : ' + str(predictions))
