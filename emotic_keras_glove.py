@@ -17,11 +17,12 @@ from keras.preprocessing.text import Tokenizer
 from keras.preprocessing.sequence import pad_sequences
 from keras.utils import to_categorical
 from keras.initializers import Constant
-from tensorflow.keras.layers import Dense, Dropout, Activation, Embedding, Conv1D, LSTM, MaxPooling1D
-from tensorflow.keras.models import Sequential
+from keras.layers import Dense, Dropout, Activation, Embedding, Conv1D, LSTM, MaxPooling1D
+from keras.models import Sequential
 import pickle
+from gensim.models import word2vec
 
-
+embedding_method = 'skip-grams'
 BASE_DIR = ''
 GLOVE_DIR = os.path.join(BASE_DIR, './glove')
 #TEXT_DATA_DIR = os.path.join(BASE_DIR, './data_glove/')
@@ -89,11 +90,20 @@ for word, i in word_index.items():
 
 # load pre-trained word embeddings into an Embedding layer
 # note that we set trainable = False so as to keep the embeddings fixed
-embedding_layer = Embedding(MAX_NUM_WORDS,
-                            EMBEDDING_DIM,
-                            embeddings_initializer=Constant(embedding_matrix),
-                            input_length=MAX_SEQUENCE_LENGTH,
-                           trainable=False)
+# embedding_layer = Embedding(MAX_NUM_WORDS,
+#                             EMBEDDING_DIM,
+#                             embeddings_initializer=Constant(embedding_matrix),
+#                             input_length=MAX_SEQUENCE_LENGTH,
+#                            trainable=False)
+
+# prepare the skip gram embedding
+w2v_model = word2vec.Word2Vec.load(os.path.join(GLOVE_DIR, './word2vec_model'))
+skip_gram_embedding_matrix = np.zeros((num_words, EMBEDDING_DIM))
+for i in range(num_words):
+    embedding_vector = w2v_model.wv[w2v_model.wv.index2word[i]]
+    if embedding_vector is not None:
+        skip_gram_embedding_matrix[i] = embedding_vector
+skip_gram_embedding_layer = w2v_model.wv.get_keras_embedding(train_embeddings=False)
 
 # saving the tokenizer
 with open('tokenizer.pickle', 'wb') as handle:
@@ -101,7 +111,12 @@ with open('tokenizer.pickle', 'wb') as handle:
 
 print('Training model.')
 model = Sequential()
-model.add(Embedding(10001, EMBEDDING_DIM, input_length=MAX_SEQUENCE_LENGTH, weights=[embedding_matrix], trainable=False))
+if embedding_method == 'glove':
+    model.add(Embedding(10001, EMBEDDING_DIM, input_length=MAX_SEQUENCE_LENGTH, weights=[embedding_matrix], trainable=False))
+elif embedding_method == 'skip-grams':
+    model.add(Embedding(input_dim=skip_gram_embedding_matrix.shape[0], output_dim=skip_gram_embedding_matrix.shape[1], 
+        input_length=MAX_SEQUENCE_LENGTH, weights=[skip_gram_embedding_matrix], trainable=False))
+    # model.add(skip_gram_embedding_layer)
 # model.add(Conv1D(8, 5, activation='relu'))
 # model.add(MaxPooling1D(pool_size=4))
 model.add(LSTM(10, activation='relu', return_sequences=True))

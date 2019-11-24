@@ -11,7 +11,7 @@ path_train_txt = './data/train.txt'
 path_test_txt = './data/test.txt'
 
 # paramètres à faire varier pour les tests
-input_struct = 'bag_of_words'
+input_struct = 'matrix_of_words'
 texts_to_matrix_mode = 'count'
 model_type = 'cnn'
 model_loss_function = 'categorical_crossentropy'
@@ -37,7 +37,7 @@ x_test, y_test = tools.read_txt_file(path_test_txt)
 t = tf.keras.preprocessing.text.Tokenizer(num_words=num_words+1) # 0 is always reserved
 t.fit_on_texts(x_train)
 
-if input_struct == 'bag_of_words':
+if input_struct == 'matrix_of_words':
 	x_train_encoded = t.texts_to_matrix(x_train, mode=texts_to_matrix_mode)[:, 1:] # https://github.com/keras-team/keras/issues/8583
 	x_test_encoded = t.texts_to_matrix(x_test, mode=texts_to_matrix_mode)[:, 1:]
 	if model_type == 'rnn' or model_type == 'lstm' or model_type == 'bi_lstm' or model_type == 'cnn':
